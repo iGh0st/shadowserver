@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+require 'shadowserver'
+require 'pp'
+require 'getoptlong'
+
+def lookup(item)
+	if item =~ /^AS(\d+)$/i
+		Shadowserver::ASN.prefix($1.to_i)
+	elsif item =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+		case $mode
+		when 'origin'
+			Shadowserver::ASN.origin(item)
+		when 'peer'
+			Shadowserver::ASN.peer(item)
+		else
+			"Unknown argument type: #{item}"
+		end
+	end
+end
+
+def usage
+	puts "Usage: #{$0} [-h|-p|-o] [<ip or asn>] [<ip or asn> ...]"
+	puts "-h usage information"
+	puts "-p display peering information"
+	puts "-o display origin information"
+	puts
+	puts "If no arguments are provided, then the tool reads from standard input."
+	puts "If an ASN is provided, then the prefixes are listed"
+	puts "Examples"
+	puts "  #{$0} -p 4.2.2.5"
+	puts "  #{$0} -o 4.2.2.5"
+	puts "  #{$0} AS2637"
+	exit
+end
+
+$mode = 'origin'
+opts = GetoptLong.new(
+	[ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+	[ '--origin', '-o', GetoptLong::NO_ARGUMENT ],
+	[ '--peer', '-p', GetoptLong::NO_ARGUMENT ]
+)
+opts.each do |opt, arg|
+	case opt
+	when '--help'
+		usage
+	when '--origin'
+		$mode = 'origin'
+	when '--peer'
+		$mode = 'peer'
+	else
+		usage
+	end
+end
+
+if ARGV.length > 0
+	ARGV.each do |item|
+		pp lookup(item)
+	end
+else
+	$stdin.each_line do |item|
+		pp lookup(item.chomp)
+	end
+end

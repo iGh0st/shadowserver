@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'shadowserver'
+require 'pp'
+
+def usage
+	puts "Usage: #{$0} (<hash>|<filename>) [<hash>|<filename> ...]"
+	puts "this tool will query the whitelist for each hash or filename provided at the commandline"
+	exit
+end
+
+ARGV.each do |item|
+	if item =~ /^[a-f0-9]{32}([a-f0-9]{8})?$/i
+		pp Shadowserver::Whitelist.by_hash(item)
+	elsif File.exists?(item)
+		pp Shadowserver::Whitelist.by_filename(item)
+	else
+		puts "#{item} isn't a hash or a filename (that I can find)"
+	end
+end
