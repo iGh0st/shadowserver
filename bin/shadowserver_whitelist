@@ -8,6 +8,8 @@ def usage
 	exit
 end
 
+usage unless ARGV.length > 0
+
 ARGV.each do |item|
 	if item =~ /^[a-f0-9]{32}([a-f0-9]{8})?$/i
 		pp Shadowserver::Whitelist.by_hash(item)
