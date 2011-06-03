@@ -2,7 +2,7 @@
 
 The Shadowserver Foundation is an all volunteer watchdog group of security professionals that gather, track, and report on malware, botnet activity, and electronic fraud. It is the mission of the Shadowserver Foundation to improve the security of the Internet by raising awareness of the presence of compromised servers, malicious attackers, and the spread of malware.
 
-This rubygem aueries various Shadowserver services for ASN information, malware hash lookups, and whitelist hash lookups
+This rubygem queries various Shadowserver services for ASN information, malware hash lookups, and whitelist hash lookups
 
 == Usage
 
@@ -19,6 +19,36 @@ This rubygem aueries various Shadowserver services for ASN information, malware 
 === Malware Query
 	mr = Shadowserver::Malware.query("aca4aad254280d25e74c82d440b76f79")
 	{"first_seen"=>"2010-06-15 03:09:41", "filetype"=>"exe", "avresults"=>{"TrendMicro"=>"TROJ_DLOADR.SMM", "AntiVir"=>"WORM/VB.NVA", "VirusBuster"=>"Worm.VB.FMYJ", "QuickHeal"=>"Worm.VB.at", "Clam"=>"Trojan.Downloader-50691", "VBA32"=>"Trojan.VBO.011858", "Sophos"=>"Troj/DwnLdr-HQY", "NOD32"=>"Win32/AutoRun.VB.JP", "Kaspersky"=>"Trojan.Win32.Cosmu.nyl", "Panda"=>"W32/OverDoom.A", "Vexira"=>"Trojan.DL.VB.EEDT", "G-Data"=>"Trojan.Generic.2609117", "Ikarus"=>"Trojan-Downloader.Win32.VB", "Norman"=>"Suspicious_Gen2.SKLJ", "McAfee"=>"Generic", "AVG7"=>"Downloader.Generic9.URM", "F-Secure"=>"Worm:W32/Revois.gen!A", "F-Prot6"=>"W32/Worm.BAOX", "DrWeb"=>"Win32.HLLW.Autoruner.6014", "Avast-Commercial"=>"Win32:Zbot-LRA"}, "ssdeep"=>"12288:gOqOB0v2eZJys73dOvXDpNjNe8NuMpX4aBaa48L/93zKnP6ppgg2HFZlxVPbZX:sOA2eZJ8NI8Nah8L/4PqmTVPlX", "sha1"=>"6fe80e56ad4de610304bab1675ce84d16ab6988e", "last_seen"=>"2010-06-15 03:09:41", "md5"=>"aca4aad254280d25e74c82d440b76f79"}
+	
+If you have access to the Extended API (see http://www.shadowserver.org/wiki/pmwiki.php/Services/Sandboxapi for details), then you can use the download, avresult, and ssdeep APIs.
+
+	mr = Shadowserver::Malware.download("aca4aad254280d25e74c82d440b76f79")
+	Digest::MD5.hexdigest(mr) == "aca4aad254280d25e74c82d440b76f79"
+
+	mr = Shadowserver::Malware.avresult("aca4aad254280d25e74c82d440b76f79")
+	{"TrendMicro"=>"TROJ_DLOADR.SMM",
+	 "AntiVir"=>"WORM/VB.NVA",
+	 "VirusBuster"=>"Worm.VB.FMYJ",
+	 "QuickHeal"=>"Worm.VB.at",
+	 "Clam"=>"Trojan.Downloader-50691",
+	 "VBA32"=>"Trojan.VBO.011858",
+	 "Sophos"=>"Troj/DwnLdr-HQY",
+	 "NOD32"=>"Win32/AutoRun.VB.JP",
+	 "Kaspersky"=>"Trojan.Win32.Cosmu.nyl",
+	 "Panda"=>"W32/OverDoom.A",
+	 "Vexira"=>"Trojan.DL.VB.EEDT",
+	 "G-Data"=>"Trojan.Generic.2609117",
+	 "Ikarus"=>"Trojan-Downloader.Win32.VB",
+	 "Norman"=>"Suspicious_Gen2.SKLJ",
+	 "McAfee"=>"Generic",
+	 "AVG7"=>"Downloader.Generic9.URM",
+	 "F-Secure"=>"Worm:W32/Revois.gen!A",
+	 "F-Prot6"=>"W32/Worm.BAOX",
+	 "DrWeb"=>"Win32.HLLW.Autoruner.6014",
+	 "Avast-Commercial"=>"Win32:Zbot-LRA"}
+
+	mr = Shadowserver::Malware.ssdeep("768:iMgK0w6C07j107GjD9h73eVv+hu8XZXc7OZrxuZDJihVJvmtjP:ZZ0w70n4GjD9hbeaLXhcMxaDJQXvojP")
+	"3ae7fc35e4dd3dd1b2afe7a9a20fe8f8"
 
 === ASN Query
 	a = Shadowserver::ASN.origin("4.2.2.5")

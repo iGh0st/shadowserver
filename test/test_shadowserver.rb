@@ -1,6 +1,5 @@
 require 'helper'
 require 'digest/md5'
-require 'pp'
 
 class TestShadowserver < Test::Unit::TestCase
 	should "return whitelist results for 0E53C14A3E48D94FF596A2824307B492" do
