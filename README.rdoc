@@ -48,7 +48,7 @@ If you have access to the Extended API (see http://www.shadowserver.org/wiki/pmw
 	 "Avast-Commercial"=>"Win32:Zbot-LRA"}
 
 	mr = Shadowserver::Malware.ssdeep("768:iMgK0w6C07j107GjD9h73eVv+hu8XZXc7OZrxuZDJihVJvmtjP:ZZ0w70n4GjD9hbeaLXhcMxaDJQXvojP")
-	"3ae7fc35e4dd3dd1b2afe7a9a20fe8f8"
+	["3ae7fc35e4dd3dd1b2afe7a9a20fe8f8"]
 
 === ASN Query
 	a = Shadowserver::ASN.origin("4.2.2.5")
