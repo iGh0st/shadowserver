@@ -1,4 +1,6 @@
 require 'helper'
+require 'digest/md5'
+require 'pp'
 
 class TestShadowserver < Test::Unit::TestCase
 	should "return whitelist results for 0E53C14A3E48D94FF596A2824307B492" do
@@ -6,7 +8,7 @@ class TestShadowserver < Test::Unit::TestCase
 		assert_not_nil(w)
 		assert_equal({"source_version"=>"$version", "language"=>"English", "os_name"=>"Windows NT", "mfg_name"=>"Corel Corporation", "filesize"=>"2226", "os_version"=>"Generic", "product_name"=>"Gallery", "filename"=>"00br2026.gif", "crc32"=>"AA6A7B16", "application_type"=>"Graphic/Drawing", "source"=>"NIST", "os_mfg"=>"Microsoft", "product_version"=>"750,000"}, w)
 	end
-
+	
 	should "return nil for whitelist query for 0E53C14A3E48D94FF596A2824307B493" do
 		w = Shadowserver::Whitelist.by_hash("0E53C14A3E48D94FF596A2824307B493")
 		assert_nil(w)
@@ -27,6 +29,43 @@ class TestShadowserver < Test::Unit::TestCase
 	should "return malware results for aca4aad254280d25e74c82d440b76f79" do
 		mr = Shadowserver::Malware.query("aca4aad254280d25e74c82d440b76f79")
 		assert_equal({"first_seen"=>"2010-06-15 03:09:41", "filetype"=>"exe", "avresults"=>{"TrendMicro"=>"TROJ_DLOADR.SMM", "AntiVir"=>"WORM/VB.NVA", "VirusBuster"=>"Worm.VB.FMYJ", "QuickHeal"=>"Worm.VB.at", "Clam"=>"Trojan.Downloader-50691", "VBA32"=>"Trojan.VBO.011858", "Sophos"=>"Troj/DwnLdr-HQY", "NOD32"=>"Win32/AutoRun.VB.JP", "Kaspersky"=>"Trojan.Win32.Cosmu.nyl", "Panda"=>"W32/OverDoom.A", "Vexira"=>"Trojan.DL.VB.EEDT", "G-Data"=>"Trojan.Generic.2609117", "Ikarus"=>"Trojan-Downloader.Win32.VB", "Norman"=>"Suspicious_Gen2.SKLJ", "McAfee"=>"Generic", "AVG7"=>"Downloader.Generic9.URM", "F-Secure"=>"Worm:W32/Revois.gen!A", "F-Prot6"=>"W32/Worm.BAOX", "DrWeb"=>"Win32.HLLW.Autoruner.6014", "Avast-Commercial"=>"Win32:Zbot-LRA"}, "ssdeep"=>"12288:gOqOB0v2eZJys73dOvXDpNjNe8NuMpX4aBaa48L/93zKnP6ppgg2HFZlxVPbZX:sOA2eZJ8NI8Nah8L/4PqmTVPlX", "sha1"=>"6fe80e56ad4de610304bab1675ce84d16ab6988e", "last_seen"=>"2010-06-15 03:09:41", "md5"=>"aca4aad254280d25e74c82d440b76f79"}, mr)
+	end
+	
+	should "download malware, aca4aad254280d25e74c82d440b76f79" do
+		mr = Shadowserver::Malware.download("aca4aad254280d25e74c82d440b76f79")
+		assert_not_nil(mr)
+		assert_equal("aca4aad254280d25e74c82d440b76f79", Digest::MD5.hexdigest(mr))
+	end
+
+	should "return av results for malware, aca4aad254280d25e74c82d440b76f79" do
+		mr = Shadowserver::Malware.avresult("aca4aad254280d25e74c82d440b76f79")
+		assert_not_nil(mr)
+		assert_equal({"TrendMicro"=>"TROJ_DLOADR.SMM",
+		 "AntiVir"=>"WORM/VB.NVA",
+		 "VirusBuster"=>"Worm.VB.FMYJ",
+		 "QuickHeal"=>"Worm.VB.at",
+		 "Clam"=>"Trojan.Downloader-50691",
+		 "VBA32"=>"Trojan.VBO.011858",
+		 "Sophos"=>"Troj/DwnLdr-HQY",
+		 "NOD32"=>"Win32/AutoRun.VB.JP",
+		 "Kaspersky"=>"Trojan.Win32.Cosmu.nyl",
+		 "Panda"=>"W32/OverDoom.A",
+		 "Vexira"=>"Trojan.DL.VB.EEDT",
+		 "G-Data"=>"Trojan.Generic.2609117",
+		 "Ikarus"=>"Trojan-Downloader.Win32.VB",
+		 "Norman"=>"Suspicious_Gen2.SKLJ",
+		 "McAfee"=>"Generic",
+		 "AVG7"=>"Downloader.Generic9.URM",
+		 "F-Secure"=>"Worm:W32/Revois.gen!A",
+		 "F-Prot6"=>"W32/Worm.BAOX",
+		 "DrWeb"=>"Win32.HLLW.Autoruner.6014",
+		 "Avast-Commercial"=>"Win32:Zbot-LRA"}, mr)
+	end
+	
+	should "return information for ssdeep hash" do
+		mr = Shadowserver::Malware.ssdeep("768:iMgK0w6C07j107GjD9h73eVv+hu8XZXc7OZrxuZDJihVJvmtjP:ZZ0w70n4GjD9hbeaLXhcMxaDJQXvojP")
+		assert_not_nil(mr)
+		assert_equal(["3ae7fc35e4dd3dd1b2afe7a9a20fe8f8"], mr)
 	end
 	
 	should "return nil for malware query for 0E53C14A3E48D94FF596A2824307B492" do
