@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{shadowserver}
-  s.version = "0.0.0"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris Lee"]
-  s.date = %q{2011-05-29}
+  s.date = %q{2011-06-03}
   s.description = %q{The Shadowserver Foundation is an all volunteer watchdog group of security professionals that gather, track, and report on malware, botnet activity, and electronic fraud. It is the mission of the Shadowserver Foundation to improve the security of the Internet by raising awareness of the presence of compromised servers, malicious attackers, and the spread of malware.}
   s.email = %q{rubygems@chrislee.dhs.org}
   s.executables = ["shadowserver_asn", "shadowserver_whitelist", "shadowserver_malware"]
@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
     "lib/shadowserver/asn.rb",
     "lib/shadowserver/malware.rb",
     "lib/shadowserver/whitelist.rb",
+    "shadowserver.gemspec",
     "test/helper.rb",
     "test/notepad.exe",
     "test/test_shadowserver.rb"
